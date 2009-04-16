@@ -18,6 +18,9 @@ class ProtocolCheckUI:
         print GmailCheck.messageCount(self.txtUsername.get_text(),self.txtPassword.get_text(),"")
         return True
     
+    def on_cmdQuit_clicked(self,widget,data=None):
+        gtk.main_quit()
+    
     def delete_event(self,widget,event,data=None):
         return False
     

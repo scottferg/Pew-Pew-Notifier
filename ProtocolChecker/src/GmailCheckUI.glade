@@ -54,6 +54,7 @@
               <widget class="GtkEntry" id="txtPassword">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="visibility">False</property>
                 <property name="invisible_char">&#x25CF;</property>
               </widget>
               <packing>
