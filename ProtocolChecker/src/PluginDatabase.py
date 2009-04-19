@@ -17,6 +17,7 @@ class PluginDatabase:
             print 'ID: ', row[0]
             print 'Name: ', row[1]
             print 'Description: ', row[2]
+            print 'Main Module: ', row[3]
     
     def write_available_plugins(self):
         
@@ -25,12 +26,12 @@ class PluginDatabase:
         for xml_file in xml_fileset:
             parser = XMLParser.XMLParser(xml_file)
             data = parser.return_result()
-            self.cursor.execute('INSERT INTO plugins VALUES (null, ?, ?)', (data[0], data[1]))
+            self.cursor.execute('INSERT INTO plugins VALUES (null, ?, ?, ?)', (data[0], data[1], data[2]))
             
         self.connect.commit()
     
     def create_plugin_table(self):
-        self.cursor.execute('CREATE TABLE plugins (id INTEGER PRIMARY KEY, name VARCHAR(50), description VARCHAR(140))')
+        self.cursor.execute('CREATE TABLE plugins (id INTEGER PRIMARY KEY, name VARCHAR(50), description VARCHAR(140), module VARCHAR(50))')
     
     def __init__(self):
         

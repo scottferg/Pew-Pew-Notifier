@@ -16,7 +16,8 @@ class ParsePlugin(saxutils.DefaultHandler):
     def __init__(self):
         # Initialize the flag to false
         self.plugin_info = []
-        self.inPluginContent = 0
+        self.inDescription = 0
+        self.inMainModule = 0
     
     def startElement(self, root, attrs):
         if root == 'plugin':
@@ -24,17 +25,26 @@ class ParsePlugin(saxutils.DefaultHandler):
             self.plugin_info.append(normalize_whitespace(name))
         
         elif root == 'description':
-            self.inPluginContent = 1
+            self.inDescription = 1
             self.plugin_description = ""
             
+        elif root == 'main_module':
+            self.inMainModule = 1
+            self.plugin_module = ""
+            
     def characters(self, ch):
-        if self.inPluginContent:
+        if self.inDescription:
             self.plugin_description = self.plugin_description + ch
+        elif self.inMainModule:
+            self.plugin_module = self.plugin_module + ch
             
     def endElement(self, name):
         if name =='description':
-            self.inPluginContent = 0
+            self.inDescription = 0
             self.plugin_info.append(normalize_whitespace(self.plugin_description))
+        elif name =='main_module':
+            self.inMainModule = 0
+            self.plugin_info.append(normalize_whitespace(self.plugin_module))
     
     def fetchDataSet(self):
         return self.plugin_info
