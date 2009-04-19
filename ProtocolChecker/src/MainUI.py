@@ -1,4 +1,10 @@
 '''
+Created on Apr 17, 2009
+
+@author: scott
+'''
+
+'''
 Created on Apr 15, 2009
 
 @author: scott
@@ -9,7 +15,7 @@ pygtk.require("2.0")
 import gtk
 import gtk.glade
 
-import GmailCheck
+from plugins import GmailCheck
 import Resources
 
 class ProtocolCheckUI:
@@ -31,7 +37,8 @@ class ProtocolCheckUI:
         self.window.hide()
     
     def connect_ui(self):
-        glade = gtk.glade.XML("GmailCheckUI.glade")
+
+        glade = gtk.glade.XML(Resources.get_ui_asset("GmailCheckUI.glade"))
         self.txtUsername = glade.get_widget("txtUsername")
         self.txtPassword = glade.get_widget("txtPassword")
         self.window = glade.get_widget("mainWindow")
