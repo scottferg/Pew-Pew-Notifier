@@ -22,7 +22,8 @@ import PluginDatabase
 class GmailCheckUI:
     
     def on_cmdLogin_clicked(self,widget,data=None):
-        print GmailCheck.messageCount(self.txtUsername.get_text(),self.txtPassword.get_text(),"")
+        check = GmailCheck.GmailCheck()
+        print check.messageCount(self.txtUsername.get_text(),self.txtPassword.get_text(),"")
         return True
     
     def on_cmdQuit_clicked(self,widget,data=None):
