@@ -17,8 +17,9 @@ import gtk.glade
 
 from plugins import GmailCheck
 import Resources
+import PluginDatabase
 
-class ProtocolCheckUI:
+class GmailCheckUI:
     
     def on_cmdLogin_clicked(self,widget,data=None):
         print GmailCheck.messageCount(self.txtUsername.get_text(),self.txtPassword.get_text(),"")
@@ -57,9 +58,11 @@ class ProtocolCheckUI:
         
         self.connect_ui()
         
+        self.plugin_db = PluginDatabase.PluginDatabase()
+        
     def main(self):
         gtk.main()
         
 if __name__ == "__main__":
-    protocol = ProtocolCheckUI()
+    protocol = GmailCheckUI()
     protocol.main()

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin name="Twitter Check 0.1">
+	<description>
+		Periodically checks your Twitter feed for new status updates
+	</description>
+	<main_module>
+		TwitterCheck
+	</main_module>
+</plugin>
