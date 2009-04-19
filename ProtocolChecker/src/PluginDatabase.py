@@ -13,11 +13,7 @@ class PluginDatabase:
     def fetch_available_plugins(self):
         self.cursor.execute('SELECT * FROM plugins')
         
-        for row in self.cursor:
-            print 'ID: ', row[0]
-            print 'Name: ', row[1]
-            print 'Description: ', row[2]
-            print 'Main Module: ', row[3]
+        return self.cursor
     
     def write_available_plugins(self):
         
