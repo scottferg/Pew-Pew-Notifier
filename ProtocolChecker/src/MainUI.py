@@ -17,9 +17,60 @@ import PluginDatabase
 
 IMPORT_STRING = []
 PLUGIN_LIST = []
+ACTIVE_LIST = []
 
 def set_import_string(class_name):
     IMPORT_STRING.append(class_name)
+    
+def call_import_string():
+    for import_func in IMPORT_STRING:
+        exec import_func
+
+class PluginModel:
+    def __init__(self, list):
+        self.tree_store = gtk.TreeStore( int, str, 'gboolean' )
+                
+        for item in list:
+            print item[0]
+            print item[1]
+            parent = self.tree_store.append( None, [item[0], item[1], None] )
+        return
+    
+    def get_model(self):
+        if self.tree_store:
+            return self.tree_store 
+        else:
+            return None
+
+class TreeDisplayModel:
+    """ Displays the Info_Model model in a view """
+    def make_view( self, model ):
+        """ Form a view for the Tree Model """
+        self.view = gtk.TreeView( model )
+        
+        self.id_renderer = gtk.CellRendererText()
+        self.title_renderer = gtk.CellRendererText()
+        
+        self.active_renderer = gtk.CellRendererToggle()
+        self.active_renderer.set_property('activatable', True)
+        self.active_renderer.connect( 'toggled', self.col_toggled_cb, model )
+        
+        self.column0 = gtk.TreeViewColumn("ID", self.id_renderer, text=0)
+        self.column0.set_visible( False )
+        self.column1 = gtk.TreeViewColumn("Name", self.title_renderer, text=1)
+        self.column2 = gtk.TreeViewColumn("Complete", self.active_renderer )
+        self.column2.add_attribute( self.active_renderer, "active", 2)
+        
+        self.view.append_column( self.column0 )
+        self.view.append_column( self.column1 )
+        self.view.append_column( self.column2 )
+        self.view.set_expander_column( self.column2 )
+        
+        return self.view
+    
+    def col_toggled_cb( self, cell, path, model ):
+        model[path][2] = not model[path][2]
+        return
 
 class MainUI:
     
@@ -27,16 +78,14 @@ class MainUI:
         self.check()
     
     def on_cmdConfigure_clicked(self,widget,data=None):
-        for import_func in IMPORT_STRING:
-            exec import_func
-        
-        for plugin_obj in PLUGIN_LIST:
-            plugin_obj.show()
+        plugin_obj = PLUGIN_LIST[ self.current_config - 1 ]
+        plugin_obj.show()
+            
+    def on_plugin_select(self,widget,data=None):
+        (model, iter) = widget.get_selected()
+        self.current_config = model.get_value(iter, 0)
         
     def check(self):
-        for import_func in IMPORT_STRING:
-            exec import_func
-        
         for plugin_obj in PLUGIN_LIST:
             print plugin_obj.check()
             
@@ -46,22 +95,17 @@ class MainUI:
     def import_plugins(self):
         
         list = self.plugin_db.fetch_available_plugins()
-        
+
         for row in list:
             
             class_import_string = "from plugins import " + row[3]
             set_import_string(class_import_string)
+            call_import_string()
             exec class_import_string
             
             exec "item = " + row[3] + "." + row[3] + "()"
             PLUGIN_LIST.append(item)
             
-            self.lblTitle.set_text(row[1])
-            self.lblDescription.set_text(row[2])
-            
-        print PLUGIN_LIST
-            # only imports within the scope of import_plugins()
-    
     def activate(self,widget,data=None):
             self.connect_ui()
             
@@ -76,15 +120,26 @@ class MainUI:
         glade = gtk.glade.XML(Resources.get_ui_asset("MainUI.glade"))
         self.cmdConfigure = glade.get_widget("cmdConfigure")
         self.cmdCheck = glade.get_widget("cmdCheck")
-        self.lblTitle = glade.get_widget("lblTitle")
-        self.lblDescription = glade.get_widget("lblDescription")
+        self.listVbox = glade.get_widget("listVbox")
         self.window = glade.get_widget("mainWindow")
+        
+        self.store = PluginModel(self.plugin_db.fetch_available_plugins())    
+        self.display = TreeDisplayModel()
+        
+        self.mdl = self.store.get_model()
+        self.view = self.display.make_view( self.mdl )
+        
+        self.tree_select = self.view.get_selection()
+        self.tree_select.set_mode(gtk.SELECTION_SINGLE)
+        self.tree_select.connect("changed", self.on_plugin_select)
+                
+        self.listVbox.pack_start(self.view)
         
         self.window.connect("destroy", self.destroy)
         
         glade.signal_autoconnect(self)
         
-        self.window.show()
+        self.window.show_all()
     
     def __init__(self):        
 #        glade = gtk.glade.XML(Resources.get_ui_asset("GmailCheckUI.glade"))
@@ -94,9 +149,11 @@ class MainUI:
 #        self.staticon.connect("popup_menu", self.popup)
         self.statusicon.set_visible(True) 
         
+        self.current_config = 1
+        self.plugin_db = PluginDatabase.PluginDatabase()
+        
         self.connect_ui()
         
-        self.plugin_db = PluginDatabase.PluginDatabase()
         self.import_plugins()
         
         self.timeoutId  = gobject.timeout_add(15000,self.check)
