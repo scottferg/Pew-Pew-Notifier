@@ -47,8 +47,6 @@ class MainUI:
         self.tree_store = gtk.TreeStore( int, str, 'gboolean' )
                 
         for item in list:
-            print item[0]
-            print item[1]
             parent = self.tree_store.append( None, [item[0], item[1], None] )
         return
     
@@ -71,9 +69,15 @@ class MainUI:
         
         self.column0 = gtk.TreeViewColumn("ID", self.id_renderer, text=0)
         self.column0.set_visible( False )
+        
         self.column1 = gtk.TreeViewColumn("Name", self.title_renderer, text=1)
+        self.column1.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
+        self.column1.set_resizable(True)
+        
+        
         self.column2 = gtk.TreeViewColumn("Complete", self.active_renderer )
         self.column2.add_attribute( self.active_renderer, "active", 2)
+        self.column2.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
         
         self.view.append_column( self.column0 )
         self.view.append_column( self.column1 )

@@ -10,6 +10,9 @@
         <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <child>
+          <placeholder/>
+        </child>
+        <child>
           <widget class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
             <property name="homogeneous">True</property>
@@ -48,11 +51,8 @@
             <property name="expand">False</property>
             <property name="fill">False</property>
             <property name="padding">11</property>
-            <property name="position">0</property>
+            <property name="position">-1</property>
           </packing>
-        </child>
-        <child>
-          <placeholder/>
         </child>
       </widget>
     </child>
