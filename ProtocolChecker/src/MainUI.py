@@ -26,8 +26,24 @@ def call_import_string():
     for import_func in IMPORT_STRING:
         exec import_func
 
-class PluginModel:
-    def __init__(self, list):
+class MainUI:
+    
+    def on_cmdCheck_clicked(self,widget,data=None):
+        self.check()
+    
+    def on_cmdConfigure_clicked(self,widget,data=None):
+        plugin_obj = PLUGIN_LIST[ self.current_config - 1 ]
+        plugin_obj.show()
+            
+    def on_plugin_select(self,widget,data=None):
+        (model, iter) = widget.get_selected()
+        self.current_config = model.get_value(iter, 0)
+        
+    def check(self):
+        for plugin_obj in PLUGIN_LIST:
+            print plugin_obj.check()
+            
+    def make_model(self, list):
         self.tree_store = gtk.TreeStore( int, str, 'gboolean' )
                 
         for item in list:
@@ -41,9 +57,7 @@ class PluginModel:
             return self.tree_store 
         else:
             return None
-
-class TreeDisplayModel:
-    """ Displays the Info_Model model in a view """
+            
     def make_view( self, model ):
         """ Form a view for the Tree Model """
         self.view = gtk.TreeView( model )
@@ -70,25 +84,8 @@ class TreeDisplayModel:
     
     def col_toggled_cb( self, cell, path, model ):
         model[path][2] = not model[path][2]
-        return
-
-class MainUI:
+        return        
     
-    def on_cmdCheck_clicked(self,widget,data=None):
-        self.check()
-    
-    def on_cmdConfigure_clicked(self,widget,data=None):
-        plugin_obj = PLUGIN_LIST[ self.current_config - 1 ]
-        plugin_obj.show()
-            
-    def on_plugin_select(self,widget,data=None):
-        (model, iter) = widget.get_selected()
-        self.current_config = model.get_value(iter, 0)
-        
-    def check(self):
-        for plugin_obj in PLUGIN_LIST:
-            print plugin_obj.check()
-            
         # Is this a memory leak?  Probably.  Whoops.
         self.timeoutId  = gobject.timeout_add(15000,self.check)
     
@@ -118,16 +115,21 @@ class MainUI:
     def connect_ui(self):
 
         glade = gtk.glade.XML(Resources.get_ui_asset("MainUI.glade"))
+        
+        self.statusicon = gtk.StatusIcon()
+        self.statusicon.set_from_stock(gtk.STOCK_ABOUT)
+        self.statusicon.connect("activate", self.activate)
+        self.statusicon.set_visible(True) 
+        
         self.cmdConfigure = glade.get_widget("cmdConfigure")
         self.cmdCheck = glade.get_widget("cmdCheck")
         self.listVbox = glade.get_widget("listVbox")
         self.window = glade.get_widget("mainWindow")
         
-        self.store = PluginModel(self.plugin_db.fetch_available_plugins())    
-        self.display = TreeDisplayModel()
+        self.store = self.make_model(self.plugin_db.fetch_available_plugins())    
         
-        self.mdl = self.store.get_model()
-        self.view = self.display.make_view( self.mdl )
+        self.mdl = self.get_model()
+        self.view = self.make_view(self.mdl)
         
         self.tree_select = self.view.get_selection()
         self.tree_select.set_mode(gtk.SELECTION_SINGLE)
@@ -142,12 +144,6 @@ class MainUI:
         self.window.show_all()
     
     def __init__(self):        
-#        glade = gtk.glade.XML(Resources.get_ui_asset("GmailCheckUI.glade"))
-        self.statusicon = gtk.StatusIcon()
-        self.statusicon.set_from_stock(gtk.STOCK_ABOUT)
-        self.statusicon.connect("activate", self.activate)
-#        self.staticon.connect("popup_menu", self.popup)
-        self.statusicon.set_visible(True) 
         
         self.current_config = 1
         self.plugin_db = PluginDatabase.PluginDatabase()
@@ -157,10 +153,7 @@ class MainUI:
         self.import_plugins()
         
         self.timeoutId  = gobject.timeout_add(15000,self.check)
-        
-#        self.main_timer = threading.Timer(5.0, self.check)
-#        self.main_timer.start() # after 30 seconds, "hello, world" will be printed
-        
+                
     def main(self):
         gtk.main()
         
