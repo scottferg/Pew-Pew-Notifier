@@ -6,11 +6,11 @@ Created on Apr 19, 2009
 
 class Plugin:
     
-    def trigger_alert(self, status):
+    def trigger_alert( self, status ):
         return status
     
-    def show(self):
+    def show( self ):
         return True
     
-    def check(self):
+    def check( self ):
         return True
