@@ -103,6 +103,12 @@ class MainUI:
     def activate( self, widget, data = None ):
             self.connect_ui( )
             
+    def popup_menu_cb(self, widget, button, time, data = None): 
+        if button == 3: 
+            if data: 
+                data.show_all() 
+                data.popup(None, None, None, 3, time) 
+            
     def delete_event( self, widget, event, data = None ):
         return False
     
@@ -113,9 +119,22 @@ class MainUI:
 
         glade = gtk.glade.XML( Resources.get_ui_asset( "MainUI.glade" ) )
         
+        menu = gtk.Menu() 
+        menuItem = gtk.ImageMenuItem(gtk.STOCK_QUIT) 
+        menuItem.connect('activate', self.destroy) 
+        menu.append(menuItem) 
+        
+        '''sm = gtk.Menu() 
+        menuItem = gtk.MenuItem('asd') 
+        menuItem.set_submenu(sm) 
+        menuItem2 = gtk.MenuItem('asdf')  
+        sm.append(menuItem2) 
+        menu.append(menuItem)''' 
+        
         self.statusicon = gtk.StatusIcon( )
         self.statusicon.set_from_stock( gtk.STOCK_ABOUT )
-        self.statusicon.connect( "activate", self.activate )
+        self.statusicon.connect("activate", self.activate)
+        self.statusicon.connect( "popup-menu", self.popup_menu_cb, menu )
         self.statusicon.set_visible( True ) 
         
         self.cmdConfigure = glade.get_widget( "cmdConfigure" )
@@ -134,7 +153,7 @@ class MainUI:
                 
         self.listVbox.pack_start( self.view )
         
-        self.window.connect( "destroy", self.destroy )
+        '''self.window.connect( "destroy", self.hide )'''
         
         glade.signal_autoconnect( self )
         
