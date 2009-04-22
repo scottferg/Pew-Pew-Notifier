@@ -103,6 +103,12 @@ class MainUI:
     def activate( self, widget, data = None ):
             self.connect_ui( )
             
+    def toggle_window(self, widget, data = None):
+        if self.window.get_property("visible"):
+            self.window.hide()
+        else:
+            self.window.show()        
+            
     def popup_menu_cb(self, widget, button, time, data = None): 
         if button == 3: 
             if data: 
@@ -110,7 +116,8 @@ class MainUI:
                 data.popup(None, None, None, 3, time) 
             
     def delete_event( self, widget, event, data = None ):
-        return False
+        self.toggle_window(self.window)
+        return True
     
     def destroy( self, widget, data = None ):
         gtk.main_quit( )
@@ -133,7 +140,7 @@ class MainUI:
         
         self.statusicon = gtk.StatusIcon( )
         self.statusicon.set_from_stock( gtk.STOCK_ABOUT )
-        self.statusicon.connect("activate", self.activate)
+        self.statusicon.connect("activate", self.toggle_window)
         self.statusicon.connect( "popup-menu", self.popup_menu_cb, menu )
         self.statusicon.set_visible( True ) 
         
@@ -153,7 +160,8 @@ class MainUI:
                 
         self.listVbox.pack_start( self.view )
         
-        '''self.window.connect( "destroy", self.hide )'''
+        self.window.connect( "delete_event", self.delete_event )
+        self.window.connect( "destroy", self.toggle_window )
         
         glade.signal_autoconnect( self )
         
