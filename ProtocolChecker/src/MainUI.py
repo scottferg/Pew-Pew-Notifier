@@ -83,8 +83,6 @@ class MainUI:
     def col_toggled_cb( self, cell, path, model ):
         model[path][2] = not model[path][2]
         
-        self.plugin_db.set_plugin_status( model[path][2], model[path][0] )
-        
         if model[path][2]:
             list = self.plugin_db.fetch_plugin( str( model[path][0] ) )
             
