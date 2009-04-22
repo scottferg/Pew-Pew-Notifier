@@ -161,7 +161,6 @@ class MainUI:
         self.listVbox.pack_start( self.view )
         
         self.window.connect( "delete_event", self.delete_event )
-        self.window.connect( "destroy", self.toggle_window )
         
         glade.signal_autoconnect( self )
         
