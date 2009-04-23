@@ -64,7 +64,7 @@ class TwitterCheckUI:
         
         self.txtUsername.set_text( self.username )
         self.txtPassword.set_text( self.password )
-        #self.txtUpdate.set_active( 1 )
+        self.txtUpdate.set_active( 1 )
         
         self.window = glade.get_widget( "mainWindow" )
                 

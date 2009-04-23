@@ -129,7 +129,7 @@
 	  </child>
 
 	  <child>
-	    <widget class="GtkComboBox" id="combobox1">
+	    <widget class="GtkComboBox" id="txtTimeLimit">
 	      <property name="height_request">30</property>
 	      <property name="visible">True</property>
 	      <property name="items" translatable="yes">1 Minute
