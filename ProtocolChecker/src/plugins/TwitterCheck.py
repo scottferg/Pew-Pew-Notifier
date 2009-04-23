@@ -14,15 +14,19 @@ class TwitterCheck( Plugin.Plugin ):
         
         if self.counter >= self.ui.get_update():
             self.counter = 0
-            self.update()
+            return self.update()
+        return ""
+
+    def trigger_alert(self, status):
+        print status
+        return status
             
     def update( self ):
         username = self.ui.get_username()
         password = self.ui.get_password()
-        api = twitter.Api( username, password)
+        api = twitter.Api( username, password )
         friend_timeline = api.GetFriendsTimeline( )
-        print "UPDATE"
-        return self.trigger_alert( friend_timeline )
+        return self.trigger_alert( len(friend_timeline) )
 
     def show( self ):
         self.ui.show( )

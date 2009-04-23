@@ -18,8 +18,14 @@ class GmailCheck( Plugin.Plugin ):
         
         return self.trigger_alert( len( inbox["entries"] ) > 0 )
     
+    def trigger_alert(self, status):
+        print status
+        return status
+    
     def show( self ):
         self.ui.show( )
+        return
     
     def __init__( self ):
         self.ui = GmailCheckUI.GmailCheckUI( )
+        return

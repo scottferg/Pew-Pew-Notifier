@@ -30,8 +30,8 @@ class MainUI:
         
     def check(self):
         for index,plugin_obj in self.plugin_list.iteritems( ):
-            print plugin_obj.check( )
-            
+            plugin_obj.check( )
+    
         # Is this a memory leak?  Probably.  Whoops.
         self.timeoutId  = gobject.timeout_add( 15000,self.check )
         
