@@ -65,13 +65,14 @@ class MainUI:
         self.column0.set_visible( False )
         
         self.column1 = gtk.TreeViewColumn( "Name", self.title_renderer, text = 1 )
-        self.column1.set_sizing( gtk.TREE_VIEW_COLUMN_GROW_ONLY )
         self.column1.set_resizable( True )
         
         
         self.column2 = gtk.TreeViewColumn( "Complete", self.active_renderer )
         self.column2.add_attribute( self.active_renderer, "active", 2 )
-        self.column2.set_sizing( gtk.TREE_VIEW_COLUMN_GROW_ONLY )
+        self.column2.set_alignment( 0.5 )
+        self.column2.set_sizing( gtk.TREE_VIEW_COLUMN_AUTOSIZE )
+        self.column1.set_fixed_width( 1 )
         
         self.view.append_column( self.column0 )
         self.view.append_column( self.column1 )
@@ -127,16 +128,12 @@ class MainUI:
         glade = gtk.glade.XML( Resources.get_ui_asset( "MainUI.glade" ) )
         
         menu = gtk.Menu() 
+        menuItem = gtk.ImageMenuItem( gtk.STOCK_CONNECT )
+        menuItem.connect('activate', self.check )
+        menu.append(menuItem)
         menuItem = gtk.ImageMenuItem(gtk.STOCK_QUIT) 
         menuItem.connect('activate', self.destroy) 
         menu.append(menuItem) 
-        
-        '''sm = gtk.Menu() 
-        menuItem = gtk.MenuItem('asd') 
-        menuItem.set_submenu(sm) 
-        menuItem2 = gtk.MenuItem('asdf')  
-        sm.append(menuItem2) 
-        menu.append(menuItem)''' 
         
         self.statusicon = gtk.status_icon_new_from_file( "ui/Pew_Checker_Icon.svg" )
 #        self.statusicon.set_from_stock( gtk.STOCK_ABOUT )

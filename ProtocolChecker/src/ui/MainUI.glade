@@ -5,6 +5,10 @@
   <widget class="GtkWindow" id="mainWindow">
     <property name="width_request">450</property>
     <property name="height_request">450</property>
+    <property name="title" translatable="yes">Pew-Pew Notifier</property>
+    <property name="resizable">False</property>
+    <property name="window_position">center</property>
+    <property name="icon">Pew_Checker_Icon.svg</property>
     <child>
       <widget class="GtkVBox" id="listVbox">
         <property name="visible">True</property>
