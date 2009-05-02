@@ -28,7 +28,7 @@ class MainUI:
         ( model, iter ) = widget.get_selected( )
         self.current_config = model.get_value( iter, 0 )
         
-    def check(self):
+    def check(self, data=None):
         for index,plugin_obj in self.plugin_list.iteritems( ):
             plugin_obj.check( )
     
