@@ -23,15 +23,18 @@ class MainUI:
     def on_cmdConfigure_clicked( self, widget, data = None ):
         plugin_obj = self.plugin_list[ self.current_config ]
         plugin_obj.show( )
-            
+         
     def on_plugin_select( self, widget, data = None ):
         ( model, iter ) = widget.get_selected( )
         self.current_config = model.get_value( iter, 0 )
         
     def check(self, data=None):
         for index,plugin_obj in self.plugin_list.iteritems( ):
-            plugin_obj.check( )
-    
+            check = ( getattr( plugin_obj, 'check' ) )
+            
+            if callable( check ):
+                check( )
+        
         # Is this a memory leak?  Probably.  Whoops.
         self.timeoutId  = gobject.timeout_add( 15000,self.check )
         
@@ -39,11 +42,11 @@ class MainUI:
             
     def make_model( self, list ):
         self.tree_store = gtk.TreeStore( int, str, 'gboolean' )
-                
+
         for item in list:
             parent = self.tree_store.append( None, [item[0], item[1], None] )
         return
-    
+
     def get_model( self ):
         if self.tree_store:
             return self.tree_store 
@@ -60,20 +63,21 @@ class MainUI:
         self.active_renderer = gtk.CellRendererToggle( )
         self.active_renderer.set_property( 'activatable', True )
         self.active_renderer.connect( 'toggled', self.col_toggled_cb, model )
-        
+
         self.column0 = gtk.TreeViewColumn( "ID", self.id_renderer, text = 0 )
         self.column0.set_visible( False )
-        
+
         self.column1 = gtk.TreeViewColumn( "Name", self.title_renderer, text = 1 )
-        self.column1.set_resizable( True )
+        self.column1.set_sizing( gtk.TREE_VIEW_COLUMN_FIXED )
+        self.column1.set_expand( True )
         
-        
-        self.column2 = gtk.TreeViewColumn( "Complete", self.active_renderer )
+
+        self.column2 = gtk.TreeViewColumn( "Enabled", self.active_renderer )
         self.column2.add_attribute( self.active_renderer, "active", 2 )
         self.column2.set_alignment( 0.5 )
         self.column2.set_sizing( gtk.TREE_VIEW_COLUMN_AUTOSIZE )
-        self.column1.set_fixed_width( 1 )
-        
+        self.column2.set_expand( False )
+
         self.view.append_column( self.column0 )
         self.view.append_column( self.column1 )
         self.view.append_column( self.column2 )
