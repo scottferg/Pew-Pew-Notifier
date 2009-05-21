@@ -14,7 +14,6 @@ def normalize_whitespace( text ):
 class ParsePlugin( saxutils.DefaultHandler ):
     
     def __init__( self ):
-        # Initialize the flag to false
         self.plugin_info = [ ]
         self.inDescription = 0
         self.inMainModule = 0
