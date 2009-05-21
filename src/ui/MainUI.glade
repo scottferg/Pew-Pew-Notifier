@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<glade-interface>
+  <!-- interface-requires gtk+ 2.16 -->
+  <!-- interface-naming-policy project-wide -->
+  <widget class="GtkWindow" id="mainWindow">
+    <property name="width_request">450</property>
+    <property name="height_request">450</property>
+    <property name="title" translatable="yes">Pew-Pew Notifier</property>
+    <property name="resizable">False</property>
+    <property name="window_position">center</property>
+    <property name="icon">Pew_Checker_Icon.svg</property>
+    <child>
+      <widget class="GtkVBox" id="listVbox">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <widget class="GtkHBox" id="hbox1">
+            <property name="visible">True</property>
+            <property name="homogeneous">True</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <widget class="GtkButton" id="cmdCheck">
+                <property name="label" translatable="yes">Check Now</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="clicked" handler="on_cmdCheck_clicked"/>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkButton" id="cmdConfigure">
+                <property name="label" translatable="yes">Configure</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="clicked" handler="on_cmdConfigure_clicked"/>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="padding">12</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="padding">11</property>
+            <property name="position">-1</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+</glade-interface>
