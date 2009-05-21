@@ -140,7 +140,6 @@ class MainUI:
         menu.append(menuItem) 
         
         self.statusicon = gtk.status_icon_new_from_file( "ui/Pew_Checker_Icon.svg" )
-#        self.statusicon.set_from_stock( gtk.STOCK_ABOUT )
         self.statusicon.connect("activate", self.toggle_window)
         self.statusicon.connect( "popup-menu", self.popup_menu_cb, menu )
         self.statusicon.set_visible( True ) 
