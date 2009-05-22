@@ -90,8 +90,9 @@ class MainUI:
         
         if model[path][2]:
             list = self.plugin_db.fetch_plugin( str( model[path][0] ) )
-            
+
             for row in list:
+                print row
                 
                 # Load and instantiate the new plugin
                 exec "from plugins import " + row[3]
