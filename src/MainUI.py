@@ -92,8 +92,6 @@ class MainUI:
             list = self.plugin_db.fetch_plugin( str( model[path][0] ) )
 
             for row in list:
-                print row
-                
                 # Load and instantiate the new plugin
                 exec "from plugins import " + row[3]
                 exec "item = " + row[3] + "." + row[3] + "()"
