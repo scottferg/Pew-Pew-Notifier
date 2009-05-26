@@ -12,24 +12,26 @@ class Parser( ):
             self.name = attrs['name']
         elif name == 'description':
             self.inDescription = True
+            self.description = ""
         elif name == 'main_module':
             self.inMainModule = True
+            self.main_module = ""
 
     def endElement( self, name ):
         if name == 'description':
             self.inDescription = False
+            self.description = self.normalizeWhitespace( self.description )
         elif name == 'main':
             self.inMainModule = False
+            self.main_module = self.normalizeWhitespace( self.main_module )
 
     def characters( self, data ):
-        print "Description: " + self.normalizeWhitespace( data )
-
         if self.inDescription:
-            self.description = self.normalizeWhitespace( data )
-            self.inDescription = False
+            self.description = self.description + data 
         elif self.inMainModule:
-            self.main_module = self.normalizeWhitespace( data )
-            self.inMainModule = False
+            # Why does this reference to data need the whitespace removed and not
+            # the description field?
+            self.main_module = self.main_module + self.normalizeWhitespace( data )
 
     def normalizeWhitespace( self, text ):
         """Remove redundant whitespace from a string"""
@@ -38,6 +40,8 @@ class Parser( ):
     def fetchSet( self ):
 
         print self.name
+        print "Description: " + self.description
+        print "Main Module: " + self.main_module
 
         return { 'name' : self.name, 'description' : self.description, 'main_module' : self.main_module }
 
