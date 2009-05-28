@@ -5,18 +5,27 @@ Created on Apr 15, 2009
 '''
 
 import Plugin
-import feedparser
 import GmailCheckUI
+import urllib2
+import base64
+import XMLParser
 
 class GmailCheck( Plugin.Plugin ):
 
     def check( self ):
-        uid = self.ui.get_username( )
-        password = self.ui.get_password( )
-        
-        inbox = feedparser.parse( "https://%s:%s@gmail.google.com/gmail/feed/atom%s" % ( uid, password, "" ) )
-        
-        return self.trigger_alert( len( inbox["entries"] ) > 0 )
+
+        request = urllib2.Request( "https://gmail.google.com/gmail/feed/atom" )
+
+        base64string = base64.encodestring( '%s:%s' % ( self.ui.get_username( ), self.ui.get_password( ) ) )[:-1]
+        request.add_header( "Authorization", "Basic %s" % base64string )
+
+        response = urllib2.urlopen( request )
+
+        data_set = XMLParser.parseStream( response.read( ) )
+
+        response.close( )
+
+        return self.trigger_alert( int( data_set['fullcount'] ) > 0 )
     
     def trigger_alert(self, status):
         print status

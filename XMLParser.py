@@ -44,7 +44,7 @@ def parseStream( uri ):
     parser.StartElementHandler = startElement
     parser.EndElementHandler = endElement
     parser.CharacterDataHandler = characters
-    parser.Parse( uri )
+    parser.Parse( uri, 1 )
 
     return data_set
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin name="Gmail Check 0.1" someval="VARIABLE">
+<plugin name="Gmail Check 0.2">
 	<description>
 		Periodically checks your Gmail account for new messages 
 	</description>
