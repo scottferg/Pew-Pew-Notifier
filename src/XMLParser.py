@@ -1,62 +1,39 @@
-'''
-Created on Apr 19, 2009
-
+'''Created on Apr 19, 2009
+ 
 @author: scott
 '''
-from xml.sax import saxutils
-from xml.sax import make_parser
-from xml.sax.handler import feature_namespaces
+from xml.parsers import expat
 
-def normalize_whitespace( text ):
-    "Remove redundant whitespace from a string"
-    return ' '.join( text.split( ) )
+class Parser( ):
+    def parse( self ):
+        return self.data_set
+    
+    def startElement( self, name, attrs ):
+        self.current_element = name
 
-class ParsePlugin( saxutils.DefaultHandler ):
-    
-    def __init__( self ):
-        # Initialize the flag to false
-        self.plugin_info = [ ]
-        self.inDescription = 0
-        self.inMainModule = 0
-    
-    def startElement( self, root, attrs ):
-        if root == 'plugin':
-            name = attrs.get( 'name', None )
-            self.plugin_info.append( normalize_whitespace( name ) )
-        
-        elif root == 'description':
-            self.inDescription = 1
-            self.plugin_description = ""
-            
-        elif root == 'main_module':
-            self.inMainModule = 1
-            self.plugin_module = ""
-            
-    def characters( self, ch ):
-        if self.inDescription:
-            self.plugin_description = self.plugin_description + ch
-        elif self.inMainModule:
-            self.plugin_module = self.plugin_module + ch
-            
+        print self.data_set 
+
+        if len( attrs ) > 0:
+            self.data_set[ name ] = dict( [ ( key, value ) for key, value in attrs.iteritems( ) ] )
+
     def endElement( self, name ):
-        if name =='description':
-            self.inDescription = 0
-            self.plugin_info.append( normalize_whitespace( self.plugin_description ) )
-        elif name =='main_module':
-            self.inMainModule = 0
-            self.plugin_info.append( normalize_whitespace( self.plugin_module ) )
-    
-    def fetchDataSet( self ):
-        return self.plugin_info
-        
-class XMLParser:
-    
-    def return_result( self ):
-        return self.default_handler.fetchDataSet( )
-    
+        self.current_element = ""
+         
+    def characters( self, data ):
+        self.data_set[ self.current_element ] = self.normalizeWhitespace( data )
+
+    def normalizeWhitespace( self, text ):
+        """Remove redundant whitespace from a string"""
+        return " ".join( text.split( ) )
+ 
     def __init__( self, file ):
-        self.parser = make_parser( )
-        self.parser.setFeature( feature_namespaces, 0 )
-        self.default_handler = ParsePlugin( )
-        self.parser.setContentHandler( self.default_handler )
-        self.parser.parse( file )
+        self.data_set = {}
+        self.current_element = ""
+
+        parser = expat.ParserCreate( )
+        parser.StartElementHandler = self.startElement
+        parser.EndElementHandler = self.endElement
+        parser.CharacterDataHandler = self.characters
+        parser.ParseFile( open( file, "r" ) )
+
+        print self.data_set

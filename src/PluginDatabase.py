@@ -25,9 +25,9 @@ class PluginDatabase:
         xml_fileset = glob.glob( 'plugins/*.xml' )
         
         for xml_file in xml_fileset:
-            parser = XMLParser.XMLParser( xml_file )
-            data = parser.return_result( )
-            self.cursor.execute( 'INSERT INTO plugins VALUES (null, ?, ?, ?)', ( data[0], data[1], data[2] ) )
+            parser = XMLParser.Parser( xml_file )
+#            data = parser.fetchSet( )
+#            self.cursor.execute( 'INSERT INTO plugins VALUES (null, ?, ?, ?)', ( data['name'], data['description'], data['main_module'] ) )
             
         self.connect.commit( )
     
