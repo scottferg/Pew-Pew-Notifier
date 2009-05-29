@@ -8,7 +8,7 @@ import Plugin
 import GmailCheckUI
 import urllib2
 import base64
-import XMLParser
+from res import XMLParser
 
 class GmailCheck( Plugin.Plugin ):
 

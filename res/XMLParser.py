@@ -36,15 +36,19 @@ def normalizeWhitespace( text ):
     """Remove redundant whitespace from a string"""
     return " ".join( text.split( ) )
 
-def parseStream( uri ):
-    """
-    Parse an XML stream and return a dictionary containing the dataset
-    """
+def initialize( ):
     parser = expat.ParserCreate( )
     parser.StartElementHandler = startElement
     parser.EndElementHandler = endElement
     parser.CharacterDataHandler = characters
-    parser.Parse( uri, 1 )
+
+    return parser
+
+def parseStream( uri ):
+    """
+    Parse an XML stream and return a dictionary containing the dataset
+    """
+    initialize( ).Parse( uri, 1 )
 
     return data_set
 
@@ -52,10 +56,6 @@ def parseFile( file ):
     """
     Parse an XML file and return a dictionary containing the dataset
     """
-    parser = expat.ParserCreate( )
-    parser.StartElementHandler = startElement
-    parser.EndElementHandler = endElement
-    parser.CharacterDataHandler = characters
-    parser.ParseFile( open( file, "r" ) )
+    initialize( ).ParseFile( open( file, "r" ) )
 
     return data_set

@@ -12,8 +12,8 @@ import gobject
 
 import threading
 
-import Resources
-import PluginDatabase
+from res import Resources
+from res import PluginDatabase
 
 class MainUI:
     
