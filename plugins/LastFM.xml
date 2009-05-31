@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin name="Last.fm Notifier 0.1">
+	<description>
+        Alerts you when friends have scrobbled new tracks.
+	</description>
+	<main_module>
+        LastFM
+	</main_module>
+</plugin>
