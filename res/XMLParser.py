@@ -13,7 +13,7 @@ def startElement( name, attrs ):
     current_element = name
 
     if len( attrs ) > 0:
-        data_set[ name ] = dict( [ ( key, value ) for key, value in attrs.iteritems( ) ] )
+        data_set[ current_element ] = dict( [ ( key, value ) for key, value in attrs.iteritems( ) ] )
 
 def endElement( name ):
     global current_element
@@ -37,6 +37,12 @@ def normalizeWhitespace( text ):
     return " ".join( text.split( ) )
 
 def initialize( ):
+    global data_set
+    global current_element
+
+    data_set = {}
+    current_element = ""
+
     parser = expat.ParserCreate( )
     parser.StartElementHandler = startElement
     parser.EndElementHandler = endElement
