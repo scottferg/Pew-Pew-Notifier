@@ -45,15 +45,12 @@ class MainUI:
         
         # Is this a memory leak?  Probably.  Whoops.
         self.timeoutId  = gobject.timeout_add( 15000,self.check )
-        
-        return
             
     def make_model( self, list ):
         self.tree_store = gtk.TreeStore( int, str, 'gboolean' )
 
         for item in list:
             parent = self.tree_store.append( None, [item[0], item[1], None] )
-        return
 
     def get_model( self ):
         if self.tree_store:

@@ -13,16 +13,17 @@ class LastFM( Plugin.Plugin ):
     SECRET_KEY = 'a20918ddb42bbec4fe005e7f52e501be'
 
     def check( self ):
-        user_list = self.make_request( { 'method':'user.getFriends', 'user':'scottferg' } )
+        user_list = self.make_request( { 'method':'user.getFriends', 'user':'Duckman2008' } )
 
         for user in json.loads( user_list )['friends']['user']:
+            print user['name']
             response = self.make_request( { 'method':'user.getrecenttracks', 'user':user['name'] } )
 
             for result in json.loads( response )['recenttracks']['track']:
                 if 'nowplaying' in result:
-                    return True
+                    return self.trigger_alert( True )
 
-        return False
+        return self.trigger_alert( False )
 
     def make_request( self, params ):
         param_string = "&".join( [ "%s=%s" % ( param, value ) for param, value in params.items( ) ] )
