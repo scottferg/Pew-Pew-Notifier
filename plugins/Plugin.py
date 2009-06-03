@@ -7,6 +7,7 @@ Created on Apr 19, 2009
 class Plugin:
     
     def trigger_alert( self, status ):
+        print "Status: %s" % status
         return status
     
     def show( self ):
