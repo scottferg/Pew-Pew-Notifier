@@ -21,7 +21,7 @@ class LastFM( Plugin.Plugin ):
 
             for result in json.loads( response )['recenttracks']['track']:
                 if 'nowplaying' in result:
-                    return self.trigger_alert( True )
+                    return self.trigger_alert( { 'alert':True, 'title':user['name'], 'message':result['artist']['#text'] + " - " + result['name'] } )
 
         return self.trigger_alert( False )
 

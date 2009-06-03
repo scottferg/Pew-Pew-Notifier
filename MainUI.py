@@ -37,7 +37,7 @@ class MainUI:
             if callable( check ):
                 result = check( )
 
-                if result['alert']:
+                if type( result ) is type( {} ) and result['alert']:
                     if pynotify.init( "Pew-Pew-Notifier" ):
                         notification = pynotify.Notification( result['title'], result['message'], "ui/Pew_Checker_Icon.svg" )
                         notification.set_timeout( 5 )

@@ -28,14 +28,7 @@ class GmailCheck( Plugin.Plugin ):
         return self.trigger_alert( int( data_set['fullcount'] ) > 0, data_set['name'], data_set['title'] )
     
     def trigger_alert(self, status, sender, subject ):
-        result = {}
-
-        result['alert'] = status
-        result['title'] = sender
-        result['message'] = subject
-
-        print status
-        return result
+        return { 'alert':status, 'title':sender, 'message':subject } 
     
     def show( self ):
         self.ui.show( )
