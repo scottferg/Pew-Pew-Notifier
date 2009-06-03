@@ -10,6 +10,8 @@ import gtk
 import gtk.glade
 import gobject
 
+import pynotify
+
 import threading
 
 from res import Resources
@@ -33,7 +35,13 @@ class MainUI:
             check = ( getattr( plugin_obj, 'check' ) )
             
             if callable( check ):
-                check( )
+                result = check( )
+
+                if result['alert']:
+                    if pynotify.init( "Pew-Pew-Notifier" ):
+                        notification = pynotify.Notification( result['title'], result['message'], "ui/Pew_Checker_Icon.svg" )
+                        notification.set_timeout( 5 )
+                        notification.show( )
         
         # Is this a memory leak?  Probably.  Whoops.
         self.timeoutId  = gobject.timeout_add( 15000,self.check )
