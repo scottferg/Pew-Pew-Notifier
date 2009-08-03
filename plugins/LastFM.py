@@ -13,7 +13,7 @@ class LastFM( Plugin.Plugin ):
     SECRET_KEY = 'a20918ddb42bbec4fe005e7f52e501be'
 
     def check( self ):
-        user_list = self.make_request( { 'method':'user.getFriends', 'user':'Duckman2008' } )
+        user_list = self.make_request( { 'method':'user.getFriends', 'user':'scottferg' } )
 
         for user in json.loads( user_list )['friends']['user']:
             print user['name']
