@@ -21,5 +21,4 @@ class Subject:
     def notify(self, *args):
         '''Notify all observers and update states'''
         for observer in self._observers:
-            if modifier != observer:
-                observer.update(self)
+            observer.update(self)

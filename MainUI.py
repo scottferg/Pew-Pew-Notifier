@@ -17,6 +17,7 @@ import gtk.glade
 import gobject
 
 import threading
+import time
 
 import observer
 
@@ -26,12 +27,23 @@ from res import Resources
 from res import PluginDatabase
 
 class PluginThread(threading.Thread):
-    def __init__(self, plugin):
+    def __init__(self, plugin, terminate = False):
         self.plugin = plugin
+        self.terminate = terminate
         threading.Thread.__init__(self)
 
     def run(self):
-        self.timeoutId = gobject.timeout_add(15000, self.check)
+        # Check for updates every 15 seconds
+        print 'Thread started'
+
+        while True:
+            print 'Checking...'
+            self.check()
+            time.sleep(15)
+
+            if self.Terminate:
+                print 'Thread terminated'
+                break
 
     def check(self):
         check = (getattr(self.plugin, 'check'))
@@ -39,8 +51,11 @@ class PluginThread(threading.Thread):
         if callable(check):
             result = check()
             
+            print result
             if type(result) is type({}) and result['alert']:
-				external.notify()
+                # Notify any observers that we've received an
+                # alert
+				self.plugin.notify()
 
 class PluginHandler(observer.Observer):
     # Do we need a constructor here?
@@ -58,13 +73,9 @@ class MainUI:
 
     def check(self, data=None):
         for index,plugin_obj in self.plugin_list.iteritems():
-            check = (getattr(plugin_obj, 'check'))
-            
-            if callable(check):
-                result = check()
-
-                if type(result) is type({}) and result['alert']:
-					external.notify()
+            plugin_obj.attach(PluginHandler())
+            # Tell the thread to terminate after it completes a single pass
+            PluginThread(plugin_obj, True).start()
     
     def on_cmdConfigure_clicked(self, widget, data = None):
         plugin_obj = self.plugin_list[self.current_config]
