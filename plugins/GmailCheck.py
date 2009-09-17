@@ -6,8 +6,10 @@ Created on Apr 15, 2009
 
 import Plugin
 import GmailCheckUI
+
 import urllib2
 import base64
+
 from res import XMLParser
 
 class GmailCheck( Plugin.Plugin ):
@@ -36,4 +38,6 @@ class GmailCheck( Plugin.Plugin ):
     
     def __init__( self ):
         self.ui = GmailCheckUI.GmailCheckUI( )
+        Plugin.Plugin.__init__(self)
+        
         return

@@ -36,4 +36,5 @@ class TwitterCheck( Plugin.Plugin ):
         self.since = 0
         self.ui = TwitterCheckUI.TwitterCheckUI( )
         self.counter = 0
+        Plugin.Plugin.__init__(self)
         return

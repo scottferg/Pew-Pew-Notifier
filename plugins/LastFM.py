@@ -32,3 +32,4 @@ class LastFM( Plugin.Plugin ):
 
     def __init( self ):
         self.make_request( )
+        Plugin.Plugin.__init__(self)
