@@ -76,6 +76,7 @@ class PluginHandler(observer.Observer):
 
     def update(self, *args):
         if args[1] is True:
+            # Handle your notifications here
             external.notify()
 
 class MainUI:
