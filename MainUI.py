@@ -31,7 +31,7 @@ class PluginThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        self.timeoutId = gobject.timeout_add(15000, self.check)
+        self.timeoutId = gobject.timeout_add(1500, self.check)
 
     def check(self):
         check = (getattr(self.plugin, 'check'))
@@ -40,15 +40,15 @@ class PluginThread(threading.Thread):
             result = check()
             
             if type(result) is type({}) and result['alert']:
-				external.notify()
+				self.plugin.notify(True)
 
 class PluginHandler(observer.Observer):
     # Do we need a constructor here?
     def __init__(self):
         pass
 
-    def update(self, value):
-        if value is True:
+    def update(self, *args):
+        if args[0] is True:
             external.notify()
 
 class MainUI:
