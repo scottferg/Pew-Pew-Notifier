@@ -10,6 +10,8 @@ import GmailCheckUI
 import urllib2
 import base64
 
+from urllib2 import HTTPError
+
 from res import XMLParser
 
 class GmailCheck( Plugin.Plugin ):
@@ -21,7 +23,11 @@ class GmailCheck( Plugin.Plugin ):
         base64string = base64.encodestring( '%s:%s' % ( self.ui.get_username( ), self.ui.get_password( ) ) )[:-1]
         request.add_header( "Authorization", "Basic %s" % base64string )
 
-        response = urllib2.urlopen( request )
+        try:
+            response = urllib2.urlopen( request )
+        except HTTPError:
+            # Don't do anything if there is an HTTP error
+            return False
 
         data_set = XMLParser.parseStream( response.read( ) )
 

@@ -26,6 +26,8 @@ import external
 from res import Resources
 from res import PluginDatabase
 
+gobject.threads_init()
+
 class PluginThread(threading.Thread):
     def __init__(self, plugin, terminate = False):
         self.plugin = plugin
@@ -34,24 +36,21 @@ class PluginThread(threading.Thread):
 
     def run(self):
         # Check for updates every 15 seconds
-        print 'Thread started'
-
         while True:
-            print 'Checking...'
             self.check()
-            time.sleep(15)
 
-            if self.Terminate:
+            if self.terminate:
                 print 'Thread terminated'
                 break
 
+            time.sleep(15)
+
     def check(self):
         check = (getattr(self.plugin, 'check'))
-            
-        if callable(check):
+
+        if callable(check) is True:
             result = check()
             
-            print result
             if type(result) is type({}) and result['alert']:
                 # Notify any observers that we've received an
                 # alert
@@ -63,7 +62,7 @@ class PluginHandler(observer.Observer):
         pass
 
     def update(self, *args):
-        if args[0] is True:
+        if args[1] is True:
             external.notify()
 
 class MainUI:
